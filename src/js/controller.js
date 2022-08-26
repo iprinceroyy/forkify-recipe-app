@@ -3,7 +3,6 @@ import icons from 'url:../img/icons.svg'; // Parcel2
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-console.log(icons);
 const recipeContainer = document.querySelector('.recipe');
 
 const timeout = function(s) {
@@ -32,6 +31,8 @@ const showRecipe = async() => {
         try {
             const id = window.location.hash.slice(1);
             console.log(id);
+
+            if (!id) return;
 
             // 1) Loading recipe
             renderSpinner(recipeContainer);
@@ -132,7 +133,6 @@ const showRecipe = async() => {
             `;
             })
             .join('')}
-          </ul>
         </div>
 
         <div class="recipe__directions">
@@ -164,4 +164,4 @@ const showRecipe = async() => {
   }
 };
 
-window.addEventListener('hashchange', showRecipe());
+['hashchange', 'load'].forEach(ev => window.addEventListener(ev, showRecipe));
