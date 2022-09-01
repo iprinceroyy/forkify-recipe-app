@@ -5,27 +5,35 @@ import icons from 'url:../../img/icons.svg'; // Parcel2
 import { Fraction } from 'fractional';
 
 class RecipeView extends View {
-    _parentElement = document.querySelector('.recipe');
-    _errorMessage = 'We could not find that recipe. Please try another one';
-    _message = '';
+  _parentElement = document.querySelector('.recipe');
+  _errorMessage = 'We could not find that recipe. Please try another one';
+  _message = '';
 
-    addHandlerRender(handler) {
-        ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
-    }
+  addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+  }
 
-    addHandlerUpdateServings(handler) {
-        this._parentElement.addEventListener('click', e => {
-            const btn = e.target.closest('.btn--tiny');
-            if (!btn) return;
-            console.log(btn);
-            const updateTo = +btn.dataset.updateTo;
+  addHandlerUpdateServings(handler) {
+    this._parentElement.addEventListener('click', e => {
+      const btn = e.target.closest('.btn--tiny');
+      if (!btn) return;
+      const updateTo = +btn.dataset.updateTo;
 
-            updateTo > 0 && handler(updateTo);
-        });
-    }
+      updateTo > 0 && handler(updateTo);
+    });
+  }
 
-    _generateMarkup() {
-        return `
+  addHanlderAddBookmark(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark');
+      if (!btn) return;
+
+      handler();
+    });
+  }
+
+  _generateMarkup() {
+    return `
         <figure class="recipe__fig">
           <img src="${this._data.image}" alt="${
       this._data.title
@@ -75,13 +83,14 @@ class RecipeView extends View {
           <div class="recipe__user-generated">
             
           </div>
-          <button class="btn--round">
+          <button class="btn--round btn--bookmark">
             <svg class="">
-              <use href="${icons}#icon-bookmark-fill"></use>
+              <use href="${icons}#icon-bookmark${
+      this._data.bookmarked ? '-fill' : ''
+    }"></use>
             </svg>
           </button>
         </div>
-
         <div class="recipe__ingredients">
           <h2 class="heading--2">Recipe ingredients</h2>
           <ul class="recipe__ingredient-list">
@@ -109,9 +118,9 @@ class RecipeView extends View {
           </a>
         </div>
         `;
-    }
-    _generateMarkupIngredient(ing) {
-        return `
+  }
+  _generateMarkupIngredient(ing) {
+    return `
             <li class="recipe__ingredient">
               <svg class="recipe__icon">
                 <use href="${icons}#icon-check"></use>
@@ -125,7 +134,7 @@ class RecipeView extends View {
               </div>
             </li>
             `;
-    }
+  }
 }
 
 export default new RecipeView();
